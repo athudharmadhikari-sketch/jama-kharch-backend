@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
-    // --------------------------------------------------------
-    // REGISTRATION NUMBER
-    // --------------------------------------------------------
+    
 
     regNo: {
       type: String,
@@ -41,9 +39,7 @@ const transactionSchema = new mongoose.Schema(
    
     },
 
-    // --------------------------------------------------------
-    // AMOUNT
-    // --------------------------------------------------------
+    
 
     amount: {
       type: Number,
@@ -51,20 +47,14 @@ const transactionSchema = new mongoose.Schema(
       min: 0,
     },
 
-    // --------------------------------------------------------
-    // STATUS
-    // --------------------------------------------------------
-
+   
     status: {
       type: String,
       enum: ["Pending", "Done"],
       
     },
 
-    // --------------------------------------------------------
-    // JAMA / KHARCH
-    // --------------------------------------------------------
-
+   
     transactionType: {
       type: String,
       enum: ["jama", "kharch"],
