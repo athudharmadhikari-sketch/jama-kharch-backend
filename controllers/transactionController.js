@@ -1,8 +1,7 @@
 const Transaction = require("../models/Transaction");
-<<<<<<< HEAD
 
 // ============================================================
-// GENERATE REG NO
+// GENERATE REGISTRATION NUMBER
 // ============================================================
 
 const generateRegNo = async () => {
@@ -20,19 +19,10 @@ const generateRegNo = async () => {
 };
 
 // ============================================================
-// CREATE
-// ============================================================
-
-const createTransaction = async (req, res, next) => {
-=======
-const getNextRegNo = require("../utils/getNextRegNo");
-
-// ============================================================
 // CREATE TRANSACTION
 // ============================================================
 
 const createTransaction = async (req, res) => {
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   try {
     const {
       name,
@@ -43,19 +33,20 @@ const createTransaction = async (req, res) => {
       transactionType,
     } = req.body;
 
-<<<<<<< HEAD
-=======
     // --------------------------------------------------------
-    // VALIDATION
+    // NAME
     // --------------------------------------------------------
 
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
     if (!name || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: "Name is required",
       });
     }
+
+    // --------------------------------------------------------
+    // TRANSACTION TYPE
+    // --------------------------------------------------------
 
     if (!transactionType) {
       return res.status(400).json({
@@ -68,16 +59,13 @@ const createTransaction = async (req, res) => {
       return res.status(400).json({
         success: false,
         message:
-<<<<<<< HEAD
-          "Transaction type must be jama or kharch",
+          "Transaction type must be either jama or kharch",
       });
     }
 
-    if (!amount || Number(amount) <= 0) {
-=======
-          "transactionType must be either jama or kharch",
-      });
-    }
+    // --------------------------------------------------------
+    // CASH / ONLINE
+    // --------------------------------------------------------
 
     if (!type || !["Cash", "Online"].includes(type)) {
       return res.status(400).json({
@@ -85,6 +73,10 @@ const createTransaction = async (req, res) => {
         message: "Type must be Cash or Online",
       });
     }
+
+    // --------------------------------------------------------
+    // AMOUNT
+    // --------------------------------------------------------
 
     const numericAmount = Number(amount);
 
@@ -94,21 +86,17 @@ const createTransaction = async (req, res) => {
       Number.isNaN(numericAmount) ||
       numericAmount <= 0
     ) {
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       return res.status(400).json({
         success: false,
         message: "Valid amount is required",
       });
     }
 
-<<<<<<< HEAD
-    const regNo = await generateRegNo();
-=======
     // --------------------------------------------------------
     // REG NO
     // --------------------------------------------------------
 
-    const regNo = await getNextRegNo(transactionType);
+    const regNo = await generateRegNo();
 
     // --------------------------------------------------------
     // DATE
@@ -128,21 +116,10 @@ const createTransaction = async (req, res) => {
     // --------------------------------------------------------
     // CREATE
     // --------------------------------------------------------
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 
     const transaction = await Transaction.create({
       regNo,
       name: name.trim(),
-<<<<<<< HEAD
-      date: date ? new Date(date) : new Date(),
-      type: type || "Cash",
-      amount: Number(amount),
-      status: status || "Pending",
-      transactionType,
-    });
-
-    res.status(201).json({
-=======
       date: transactionDate,
       type,
       amount: numericAmount,
@@ -154,38 +131,29 @@ const createTransaction = async (req, res) => {
     });
 
     return res.status(201).json({
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       success: true,
       message: "Transaction created successfully",
       data: transaction,
     });
   } catch (error) {
-<<<<<<< HEAD
-    next(error);
-=======
-    console.error("CREATE TRANSACTION ERROR:", error);
+    console.error(
+      "CREATE TRANSACTION ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
       message: "Failed to create transaction",
       error: error.message,
     });
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   }
 };
 
 // ============================================================
-<<<<<<< HEAD
-// GET LIST
-// ============================================================
-
-const getTransactions = async (req, res, next) => {
-=======
 // GET ALL TRANSACTIONS
 // ============================================================
 
 const getTransactions = async (req, res) => {
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   try {
     const {
       transactionType,
@@ -196,34 +164,15 @@ const getTransactions = async (req, res) => {
 
     const filter = {};
 
-<<<<<<< HEAD
-    if (transactionType) {
-      filter.transactionType = transactionType;
-    }
-
-    if (status) {
-      filter.status = status;
-    }
-
-    if (type) {
-      filter.type = type;
-    }
-
-=======
     // --------------------------------------------------------
-    // JAMA / KHARCH FILTER
+    // JAMA / KHARCH
     // --------------------------------------------------------
 
     if (transactionType) {
-      if (
-        !["jama", "kharch"].includes(
-          transactionType
-        )
-      ) {
+      if (!["jama", "kharch"].includes(transactionType)) {
         return res.status(400).json({
           success: false,
-          message:
-            "Invalid transactionType",
+          message: "Invalid transactionType",
         });
       }
 
@@ -231,7 +180,7 @@ const getTransactions = async (req, res) => {
     }
 
     // --------------------------------------------------------
-    // STATUS FILTER
+    // STATUS
     // --------------------------------------------------------
 
     if (status) {
@@ -264,7 +213,6 @@ const getTransactions = async (req, res) => {
     // SEARCH
     // --------------------------------------------------------
 
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
     if (search && search.trim()) {
       filter.$or = [
         {
@@ -282,62 +230,37 @@ const getTransactions = async (req, res) => {
       ];
     }
 
-<<<<<<< HEAD
-    const transactions = await Transaction.find(filter)
-      .sort({
-        date: -1,
-        createdAt: -1,
-      });
-
-    res.json({
-=======
     // --------------------------------------------------------
     // QUERY
     // --------------------------------------------------------
 
-    const transactions =
-      await Transaction.find(filter)
-        .sort({
-          date: -1,
-          createdAt: -1,
-        })
-        .lean();
+    const transactions = await Transaction.find(filter)
+      .sort({
+        date: -1,
+        createdAt: -1,
+      })
+      .lean();
 
     return res.status(200).json({
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       success: true,
       count: transactions.length,
       data: transactions,
     });
   } catch (error) {
-<<<<<<< HEAD
-    next(error);
-=======
-    console.error("GET TRANSACTIONS ERROR:", error);
+    console.error(
+      "GET TRANSACTIONS ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
       message: "Failed to fetch transactions",
       error: error.message,
     });
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   }
 };
 
 // ============================================================
-<<<<<<< HEAD
-// GET ONE
-// ============================================================
-
-const getTransactionById = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const transaction =
-      await Transaction.findById(req.params.id);
-=======
 // GET SINGLE TRANSACTION
 // ============================================================
 
@@ -347,7 +270,6 @@ const getTransactionById = async (req, res) => {
 
     const transaction =
       await Transaction.findById(id);
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 
     if (!transaction) {
       return res.status(404).json({
@@ -356,18 +278,11 @@ const getTransactionById = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    res.json({
-=======
     return res.status(200).json({
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       success: true,
       data: transaction,
     });
   } catch (error) {
-<<<<<<< HEAD
-    next(error);
-=======
     console.error(
       "GET TRANSACTION ERROR:",
       error
@@ -378,22 +293,10 @@ const getTransactionById = async (req, res) => {
       message: "Failed to fetch transaction",
       error: error.message,
     });
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   }
 };
 
 // ============================================================
-<<<<<<< HEAD
-// UPDATE
-// ============================================================
-
-const updateTransaction = async (
-  req,
-  res,
-  next
-) => {
-  try {
-=======
 // UPDATE TRANSACTION
 // ============================================================
 
@@ -401,7 +304,6 @@ const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
 
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
     const {
       name,
       date,
@@ -411,13 +313,7 @@ const updateTransaction = async (req, res) => {
     } = req.body;
 
     const transaction =
-<<<<<<< HEAD
-      await Transaction.findById(
-        req.params.id
-      );
-=======
       await Transaction.findById(id);
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 
     if (!transaction) {
       return res.status(404).json({
@@ -426,25 +322,6 @@ const updateTransaction = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    if (name !== undefined) {
-      transaction.name = name.trim();
-    }
-
-    if (date !== undefined) {
-      transaction.date = new Date(date);
-    }
-
-    if (type !== undefined) {
-      transaction.type = type;
-    }
-
-    if (amount !== undefined) {
-      transaction.amount = Number(amount);
-    }
-
-    if (status !== undefined) {
-=======
     // --------------------------------------------------------
     // NAME
     // --------------------------------------------------------
@@ -485,8 +362,7 @@ const updateTransaction = async (req, res) => {
       if (!["Cash", "Online"].includes(type)) {
         return res.status(400).json({
           success: false,
-          message:
-            "Type must be Cash or Online",
+          message: "Type must be Cash or Online",
         });
       }
 
@@ -525,25 +401,14 @@ const updateTransaction = async (req, res) => {
         });
       }
 
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       transaction.status = status;
     }
 
     await transaction.save();
 
-<<<<<<< HEAD
-    res.json({
-      success: true,
-      message: "Transaction updated successfully",
-      data: transaction,
-    });
-  } catch (error) {
-    next(error);
-=======
     return res.status(200).json({
       success: true,
-      message:
-        "Transaction updated successfully",
+      message: "Transaction updated successfully",
       data: transaction,
     });
   } catch (error) {
@@ -557,26 +422,10 @@ const updateTransaction = async (req, res) => {
       message: "Failed to update transaction",
       error: error.message,
     });
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   }
 };
 
 // ============================================================
-<<<<<<< HEAD
-// DELETE
-// ============================================================
-
-const deleteTransaction = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const transaction =
-      await Transaction.findByIdAndDelete(
-        req.params.id
-      );
-=======
 // DELETE TRANSACTION
 // ============================================================
 
@@ -586,7 +435,6 @@ const deleteTransaction = async (req, res) => {
 
     const transaction =
       await Transaction.findById(id);
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 
     if (!transaction) {
       return res.status(404).json({
@@ -595,21 +443,11 @@ const deleteTransaction = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    res.json({
-      success: true,
-      message: "Transaction deleted successfully",
-      data: transaction,
-    });
-  } catch (error) {
-    next(error);
-=======
     await Transaction.findByIdAndDelete(id);
 
     return res.status(200).json({
       success: true,
-      message:
-        "Transaction deleted successfully",
+      message: "Transaction deleted successfully",
     });
   } catch (error) {
     console.error(
@@ -622,7 +460,6 @@ const deleteTransaction = async (req, res) => {
       message: "Failed to delete transaction",
       error: error.message,
     });
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
   }
 };
 
@@ -630,12 +467,7 @@ const deleteTransaction = async (req, res) => {
 // SUMMARY
 // ============================================================
 
-<<<<<<< HEAD
-const getSummary = async (
-  req,
-  res,
-  next
-) => {
+const getSummary = async (req, res) => {
   try {
     const result = await Transaction.aggregate([
       {
@@ -650,24 +482,6 @@ const getSummary = async (
         },
       },
     ]);
-=======
-const getSummary = async (req, res) => {
-  try {
-    const result =
-      await Transaction.aggregate([
-        {
-          $group: {
-            _id: "$transactionType",
-            total: {
-              $sum: "$amount",
-            },
-            count: {
-              $sum: 1,
-            },
-          },
-        },
-      ]);
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 
     let jamaTotal = 0;
     let kharchTotal = 0;
@@ -675,11 +489,7 @@ const getSummary = async (req, res) => {
     let jamaCount = 0;
     let kharchCount = 0;
 
-<<<<<<< HEAD
-    result.forEach((item) => {
-=======
     for (const item of result) {
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
       if (item._id === "jama") {
         jamaTotal = item.total;
         jamaCount = item.count;
@@ -689,26 +499,6 @@ const getSummary = async (req, res) => {
         kharchTotal = item.total;
         kharchCount = item.count;
       }
-<<<<<<< HEAD
-    });
-
-    res.json({
-      success: true,
-      data: {
-        jamaTotal,
-        kharchTotal,
-        jamaCount,
-        kharchCount,
-        balance:
-          jamaTotal - kharchTotal,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-=======
     }
 
     return res.status(200).json({
@@ -745,7 +535,6 @@ const getSummary = async (req, res) => {
 // EXPORT
 // ============================================================
 
->>>>>>> 8ec39e371648a631f3b074089060662c5e7eb406
 module.exports = {
   createTransaction,
   getTransactions,
