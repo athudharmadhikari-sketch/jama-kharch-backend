@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri = process.env.MONGO_URI;
 
     if (!mongoUri) {
-      throw new Error("MONGODB_URI is not defined");
+      throw new Error("MONGO_URI is not defined");
     }
 
     const connection = await mongoose.connect(mongoUri);
 
     console.log(
-      `MongoDB connected: ${connection.connection.host}`
+      `MongoDB Connected: ${connection.connection.host}`
     );
   } catch (error) {
     console.error(
