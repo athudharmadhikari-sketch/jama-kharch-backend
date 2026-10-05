@@ -1,0 +1,33 @@
+{
+  "name": "jama-kharch-api",
+  "version": "1.0.0",
+  "description": "Jama Kharch Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.0"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/athudharmadhikari-sketch/jama-kharch-flutter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/athudharmadhikari-sketch/jama-kharch-flutter/issues"
+  },
+  "homepage": "https://github.com/athudharmadhikari-sketch/jama-kharch-flutter#readme"
+}
